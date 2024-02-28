@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Streaming Control</title>
+</head>
+<body>
+    <div class="container">
+        <h3>Live Streaming</h3>
+        <button id="startButton">Start</button>
+        <button id="stopButton">Stop</button>
+        <br>
+        <br>
+        <br>
+        <img id="video" width="50%">
+    </div>
+
+    <script>
+        document.getElementById('startButton').addEventListener('click', async function() {
+            await fetch('/start_video');
+            var video = document.getElementById('video');
+            video.src = "{{ url_for('video_feed') }}";
+        });
+
+        document.getElementById('stopButton').addEventListener('click', async function() {
+            await fetch('/stop_video');
+            document.getElementById('video').src = "";
+        });
+    </script>
+</body>
+</html>
