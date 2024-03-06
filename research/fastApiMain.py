@@ -6,8 +6,16 @@ import face_recognition
 import os
 from datetime import datetime
 import threading
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Global variables
 camera_status = False
@@ -53,7 +61,7 @@ def markAttendance(name):
             f.writelines(f'\n{name},{dtString}')
 
 def start_camera():
-    global camera_status
+    global camera_status 
 
     # Use encodeListKnown globally
     global encodeListKnown  
@@ -88,6 +96,12 @@ def start_camera():
     cap.release()
     cv2.destroyAllWindows()
 
+@app.get('/')
+async def ddnot():
+    return {"welcome": "welcome to attendense system"}
+
+
+
 @app.get('/start_camera')
 async def start_camera_route(background_tasks: BackgroundTasks):
     global camera_status, camera_thread
@@ -108,3 +122,9 @@ async def stop_camera_route():
         return JSONResponse(content={'status': 'Camera stopped'})
     else:
         return JSONResponse(content={'status': 'Camera not running'})
+
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=9000)
+    
