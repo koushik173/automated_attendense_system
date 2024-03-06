@@ -7,7 +7,7 @@ __pycache__/
 *.so
 dlib
 new
-
+Training_images/*
 
 # Distribution / packaging
 .Python

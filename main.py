@@ -112,10 +112,7 @@ async def video_feed():
 async def start_video():
     global video_capture
     global camera_status
-
-    
     video_capture = cv2.VideoCapture(0, cv2.CAP_DSHOW)
-
     camera_status = True
     return {"message": "Video started"}
 
@@ -142,6 +139,24 @@ async def stop_video():
         pass
 
     return {"message": "Video stopped"}
+
+import json
+from componant.save_image import get_ready_for_download
+
+@app.post("/download_image")
+async def download_image(doc: dict):
+    global path
+    try:
+        res = get_ready_for_download(doc)
+        name = doc['className']
+        path = f"images/{name}"
+        return res
+    except Exception as e:
+        return str(e)
+
+@app.get("/path")
+async def download_image():
+    return path
 
 if __name__ == "__main__":
     import uvicorn
